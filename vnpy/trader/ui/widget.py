@@ -38,7 +38,6 @@ from ..utility import load_json, save_json, get_digits, ZoneInfo
 from ..setting import SETTING_FILENAME, SETTINGS
 from ..locale import _
 
-
 COLOR_LONG = QtGui.QColor("red")
 COLOR_SHORT = QtGui.QColor("green")
 COLOR_BID = QtGui.QColor(255, 174, 201)
@@ -683,6 +682,7 @@ class ConnectDialog(QtWidgets.QDialog):
         self.main_engine.close()
         self.accept()
 
+
 class TradingWidget(QtWidgets.QWidget):
     """
     General manual trading widget.
@@ -750,6 +750,12 @@ class TradingWidget(QtWidgets.QWidget):
         cancel_button: QtWidgets.QPushButton = QtWidgets.QPushButton(_("全撤"))
         cancel_button.clicked.connect(self.cancel_all)
 
+        subscribe_button: QtWidgets.QPushButton = QtWidgets.QPushButton(_("订阅市场数据"))
+        subscribe_button.clicked.connect(self.subscribe_market_data)
+
+        unsubscribe_button: QtWidgets.QPushButton = QtWidgets.QPushButton(_("取消订阅市场数据"))
+        unsubscribe_button.clicked.connect(self.unsubscribe_market_data)
+
         grid: QtWidgets.QGridLayout = QtWidgets.QGridLayout()
         grid.addWidget(QtWidgets.QLabel(_("交易所")), 0, 0)
         grid.addWidget(QtWidgets.QLabel(_("代码")), 1, 0)
@@ -772,6 +778,10 @@ class TradingWidget(QtWidgets.QWidget):
         grid.addWidget(self.gateway_combo, 8, 1, 1, 2)
         grid.addWidget(send_button, 9, 0, 1, 3)
         grid.addWidget(cancel_button, 10, 0, 1, 3)
+
+        grid.addWidget(subscribe_button, 12, 0, 1, 3)
+
+        grid.addWidget(unsubscribe_button, 13, 0, 1, 3)
 
         # Market depth display area
         bid_color: str = "rgb(255,174,201)"
@@ -834,9 +844,9 @@ class TradingWidget(QtWidgets.QWidget):
         self.setLayout(vbox)
 
     def create_label(
-        self,
-        color: str = "",
-        alignment: int = QtCore.Qt.AlignmentFlag.AlignLeft
+            self,
+            color: str = "",
+            alignment: int = QtCore.Qt.AlignmentFlag.AlignLeft
     ) -> QtWidgets.QLabel:
         """
         Create label with certain font color.
@@ -1013,6 +1023,31 @@ class TradingWidget(QtWidgets.QWidget):
             req: CancelRequest = order.create_cancel_request()
             self.main_engine.cancel_order(req, order.gateway_name)
 
+    def subscribe_market_data(self) -> None:
+        """
+        subscribe_market_data
+        """
+        symbol: str = str(self.symbol_line.text())
+        if not symbol:
+            QtWidgets.QMessageBox.critical(self, _("订阅失败"), _("请输入合约代码"))
+            return
+        gateway_name: str = str(self.gateway_combo.currentText())
+        req: SubscribeRequest = SubscribeRequest(
+            symbol=symbol,
+            exchange="SMART"
+        )
+        self.main_engine.subscribe(req, gateway_name)
+
+    def unsubscribe_market_data(self) -> None:
+        """
+        Cancel all active orders.
+        """
+        req: SubscribeRequest = SubscribeRequest(
+            symbol=symbol,
+            exchange=Exchange.IBKRATS
+        )
+        self.main_engine.unsubscribe(req, gateway_name)
+
     def update_with_cell(self, cell: BaseCell) -> None:
         """"""
         data = cell.get_data()
@@ -1029,7 +1064,7 @@ class TradingWidget(QtWidgets.QWidget):
                 direction: Direction = Direction.LONG
             elif data.direction == Direction.LONG:
                 direction: Direction = Direction.SHORT
-            else:       # Net position mode
+            else:  # Net position mode
                 if data.volume > 0:
                     direction: Direction = Direction.SHORT
                 else:

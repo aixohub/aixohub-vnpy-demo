@@ -196,6 +196,13 @@ class BaseGateway(ABC):
         pass
 
     @abstractmethod
+    def unsubscribe(self, req: SubscribeRequest) -> None:
+        """
+        unSubscribe tick data update.
+        """
+        pass
+
+    @abstractmethod
     def send_order(self, req: OrderRequest) -> str:
         """
         Send a new order to server.

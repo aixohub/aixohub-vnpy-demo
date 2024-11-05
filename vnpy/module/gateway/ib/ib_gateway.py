@@ -227,7 +227,13 @@ class IbGateway(BaseGateway):
 
     def subscribe(self, req: SubscribeRequest) -> None:
         """订阅行情"""
+        print(f"订阅行情 {req.symbol}")
         self.api.subscribe(req)
+
+    def unsubscribe(self, req: SubscribeRequest) -> None:
+        """订阅行情"""
+        print(f"取消订阅行情 {req.symbol}")
+        self.api.unsubscribe(req)
 
     def send_order(self, req: OrderRequest) -> str:
         """委托下单"""
@@ -427,6 +433,10 @@ class IbApi(EWrapper):
         tick.datetime = dt.replace(tzinfo=LOCAL_TZ)
 
         self.gateway.on_tick(copy(tick))
+
+    def tickByTickBidAsk(self, reqId, time, bidPrice, askPrice, bidSize, askSize, tickAttribBidAsk):
+        print(f"reqId:{reqId} bidPrice:{bidPrice}")
+
 
     def tickOptionComputation(
         self,
@@ -1175,6 +1185,7 @@ class IbApi(EWrapper):
 
         # 发送退订请求
         self.client.cancelMktData(cancel_id)
+
 
 
 def generate_ib_contract(symbol: str, exchange: Exchange) -> Optional[Contract]:

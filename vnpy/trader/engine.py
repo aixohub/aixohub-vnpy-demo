@@ -188,6 +188,14 @@ class MainEngine:
         if gateway:
             gateway.subscribe(req)
 
+    def unsubscribe(self, req: SubscribeRequest, gateway_name: str) -> None:
+        """
+        Subscribe tick data update of a specific gateway.
+        """
+        gateway: BaseGateway = self.get_gateway(gateway_name)
+        if gateway:
+            gateway.unsubscribe(req)
+
     def send_order(self, req: OrderRequest, gateway_name: str) -> str:
         """
         Send new order request to a specific gateway.
