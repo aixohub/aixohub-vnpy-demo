@@ -173,13 +173,13 @@ def get_database_v2() -> BaseDatabase:
 
     if database_name == "mysql":
         try:
-            from vnpy.database.mysql_database import MysqlDatabase
+            from vnpy.module.database import MysqlDatabase
             database = MysqlDatabase()
         except ImportError:
             pass
     if database_name == "mongodb":
         try:
-            from vnpy.database.mongodb_database import MongodbDatabase
+            from vnpy.module.database.mongodb_database import MongodbDatabase
             database = MongodbDatabase()
         except ImportError:
             pass

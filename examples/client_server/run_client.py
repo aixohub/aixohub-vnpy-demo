@@ -1,5 +1,5 @@
 from vnpy.event import EventEngine
-from vnpy.strategy_cta import CtaStrategyApp
+from vnpy.module.strategy_cta import CtaStrategyApp
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.ui import MainWindow, create_qapp
 

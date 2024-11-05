@@ -1,5 +1,8 @@
 # flake8: noqa
 from vnpy.event import EventEngine
+from vnpy.module.datamanager import DataManagerApp
+from vnpy.module.gateway.ib import IbGateway
+from vnpy.module.strategy_cta import CtaStrategyApp
 
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.ui import MainWindow, create_qapp
@@ -25,8 +28,8 @@ from vnpy_ctp import CtpGateway
 # from vnpy_hft import GtjaGateway
 
 # from vnpy_paperaccount import PaperAccountApp
-from vnpy_ctastrategy import CtaStrategyApp
-from vnpy_ctabacktester import CtaBacktesterApp
+
+# from vnpy_ctabacktester import CtaBacktesterApp
 # from vnpy_spreadtrading import SpreadTradingApp
 # from vnpy_algotrading import AlgoTradingApp
 # from vnpy_optionmaster import OptionMasterApp
@@ -35,7 +38,7 @@ from vnpy_ctabacktester import CtaBacktesterApp
 # from vnpy_chartwizard import ChartWizardApp
 # from vnpy_rpcservice import RpcServiceApp
 # from vnpy_excelrtd import ExcelRtdApp
-from vnpy_datamanager import DataManagerApp
+
 # from vnpy_datarecorder import DataRecorderApp
 # from vnpy_riskmanager import RiskManagerApp
 # from vnpy_webtrader import WebTraderApp
@@ -50,7 +53,7 @@ def main():
 
     main_engine = MainEngine(event_engine)
 
-    main_engine.add_gateway(CtpGateway)
+    #main_engine.add_gateway(CtpGateway)
     # main_engine.add_gateway(CtptestGateway)
     # main_engine.add_gateway(MiniGateway)
     # main_engine.add_gateway(FemasGateway)
@@ -63,7 +66,7 @@ def main():
     # main_engine.add_gateway(ToraOptionGateway)
     # main_engine.add_gateway(OesGateway)
     # main_engine.add_gateway(ComstarGateway)
-    # main_engine.add_gateway(IbGateway)
+    main_engine.add_gateway(IbGateway)
     # main_engine.add_gateway(TapGateway)
     # main_engine.add_gateway(DaGateway)
     # main_engine.add_gateway(RohonGateway)
@@ -74,7 +77,7 @@ def main():
 
     # main_engine.add_app(PaperAccountApp)
     main_engine.add_app(CtaStrategyApp)
-    main_engine.add_app(CtaBacktesterApp)
+    # main_engine.add_app(CtaBacktesterApp)
     # main_engine.add_app(SpreadTradingApp)
     # main_engine.add_app(AlgoTradingApp)
     # main_engine.add_app(OptionMasterApp)
