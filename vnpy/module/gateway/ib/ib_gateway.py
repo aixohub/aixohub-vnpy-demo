@@ -298,8 +298,8 @@ class IbApi(EWrapper):
         self.history_condition: Condition = Condition()
         self.history_buf: list[BarData] = []
 
-        self.reqid_symbol_map: dict[int, str] = {}              # reqid: subscribe tick symbol
-        self.reqid_underlying_map: dict[int, Contract] = {}     # reqid: query option underlying
+        self.reqid_symbol_map: dict[int, str] = {}  # reqid: subscribe tick symbol
+        self.reqid_underlying_map: dict[int, Contract] = {}  # reqid: query option underlying
 
         self.client: EClient = EClient(self)
 
@@ -308,7 +308,6 @@ class IbApi(EWrapper):
         # Account list received
         self.managed_accounts = list()
         # self.reqPositions()
-
 
     def connectAck(self) -> None:
         """连接成功回报"""
@@ -342,11 +341,11 @@ class IbApi(EWrapper):
         self.gateway.write_log(msg)
 
     def error(
-        self,
-        reqId: TickerId,
-        errorCode: int,
-        errorString: str,
-        advancedOrderRejectJson: str = ""
+            self,
+            reqId: TickerId,
+            errorCode: int,
+            errorString: str,
+            advancedOrderRejectJson: str = ""
     ) -> None:
         """具体错误请求回报"""
         super().error(reqId, errorCode, errorString)
@@ -435,22 +434,30 @@ class IbApi(EWrapper):
         self.gateway.on_tick(copy(tick))
 
     def tickByTickBidAsk(self, reqId, time, bidPrice, askPrice, bidSize, askSize, tickAttribBidAsk):
+        super().tickByTickBidAsk(reqId, time, bidPrice, askPrice, bidSize, askSize, tickAttribBidAsk)
         print(f"reqId:{reqId} bidPrice:{bidPrice}")
-
+        tick: TickData = self.ticks.get(reqId, None)
+        dt: datetime = datetime.fromtimestamp(int(time))
+        tick.datetime = dt.replace(tzinfo=LOCAL_TZ)
+        tick.bid_price_1 = bidPrice
+        tick.bid_volume_1 = bidSize
+        tick.ask_price_1 = askPrice
+        tick.ask_volume_1 = askSize
+        self.gateway.on_tick(copy(tick))
 
     def tickOptionComputation(
-        self,
-        reqId: TickerId,
-        tickType: TickType,
-        tickAttrib: int,
-        impliedVol: float,
-        delta: float,
-        optPrice: float,
-        pvDividend: float,
-        gamma: float,
-        vega: float,
-        theta: float,
-        undPrice: float
+            self,
+            reqId: TickerId,
+            tickType: TickType,
+            tickAttrib: int,
+            impliedVol: float,
+            delta: float,
+            optPrice: float,
+            pvDividend: float,
+            gamma: float,
+            vega: float,
+            theta: float,
+            undPrice: float
     ):
         """tick期权数据推送"""
         super().tickOptionComputation(
@@ -503,18 +510,18 @@ class IbApi(EWrapper):
         self.gateway.write_log(f"{tick.vt_symbol}行情切片查询成功")
 
     def orderStatus(
-        self,
-        orderId: OrderId,
-        status: str,
-        filled: Decimal,
-        remaining: Decimal,
-        avgFillPrice: float,
-        permId: int,
-        parentId: int,
-        lastFillPrice: float,
-        clientId: int,
-        whyHeld: str,
-        mktCapPrice: float,
+            self,
+            orderId: OrderId,
+            status: str,
+            filled: Decimal,
+            remaining: Decimal,
+            avgFillPrice: float,
+            permId: int,
+            parentId: int,
+            lastFillPrice: float,
+            clientId: int,
+            whyHeld: str,
+            mktCapPrice: float,
     ) -> None:
         """订单状态更新回报"""
         super().orderStatus(
@@ -546,11 +553,11 @@ class IbApi(EWrapper):
         self.gateway.on_order(copy(order))
 
     def openOrder(
-        self,
-        orderId: OrderId,
-        ib_contract: Contract,
-        ib_order: Order,
-        orderState: OrderState,
+            self,
+            orderId: OrderId,
+            ib_contract: Contract,
+            ib_order: Order,
+            orderState: OrderState,
     ) -> None:
         """新订单回报"""
         super().openOrder(orderId, ib_contract, ib_order, orderState)
@@ -604,17 +611,16 @@ class IbApi(EWrapper):
         setattr(account, name, float(val))
         print(f"updateAccountValue key: {key}, val: {val}, currency: {currency}, accountName: {accountName}")
 
-
     def updatePortfolio(
-        self,
-        contract: Contract,
-        position: Decimal,
-        marketPrice: float,
-        marketValue: float,
-        averageCost: float,
-        unrealizedPNL: float,
-        realizedPNL: float,
-        accountName: str,
+            self,
+            contract: Contract,
+            position: Decimal,
+            marketPrice: float,
+            marketValue: float,
+            averageCost: float,
+            unrealizedPNL: float,
+            realizedPNL: float,
+            accountName: str,
     ) -> None:
         """持仓更新回报"""
         super().updatePortfolio(
@@ -633,7 +639,7 @@ class IbApi(EWrapper):
         elif contract.primaryExchange:
             exchange: Exchange = EXCHANGE_IB2VT.get(contract.primaryExchange, None)
         else:
-            exchange: Exchange = Exchange.SMART   # Use smart routing for default
+            exchange: Exchange = Exchange.SMART  # Use smart routing for default
 
         if not exchange:
             msg: str = f"存在不支持的交易所持仓：{self.generate_symbol(contract)} {contract.exchange} {contract.primaryExchange}"
@@ -657,7 +663,6 @@ class IbApi(EWrapper):
             gateway_name=self.gateway_name,
         )
         self.gateway.on_position(pos)
-
 
     def accountDownloadEnd(self, accountName):
         """This is called after a batch updateAccountValue() and
@@ -869,11 +874,11 @@ class IbApi(EWrapper):
         self.history_condition.release()
 
     def connect(
-        self,
-        host: str,
-        port: int,
-        clientid: int,
-        account: str
+            self,
+            host: str,
+            port: int,
+            clientid: int,
+            account: str
     ) -> None:
         """连接TWS"""
         if self.status:
@@ -936,39 +941,44 @@ class IbApi(EWrapper):
 
     def subscribe(self, req: SubscribeRequest) -> None:
         """订阅tick数据更新"""
-        if not self.status:
-            return
 
         if req.exchange not in EXCHANGE_VT2IB:
             self.gateway.write_log(f"不支持的交易所{req.exchange}")
-            return
+            print(f"不支持的交易所{req.exchange}")
 
         if " " in req.symbol:
             self.gateway.write_log("订阅失败，合约代码中包含空格")
-            return
+            print("订阅失败，合约代码中包含空格")
+
+        if not req.timeframe:
+            req.timeframe = "ticks"
 
         # 过滤重复订阅
         if req.vt_symbol in self.subscribed:
             return
         self.subscribed[req.vt_symbol] = req
 
+        c_symbol = f"{req.symbol}-{req.currency}-{req.secType}"
         # 解析IB合约详情
-        ib_contract: Contract = generate_ib_contract(req.symbol, req.exchange)
+        ib_contract: Contract = generate_ib_contract_v2(c_symbol, req.exchange)
         if not ib_contract:
             self.gateway.write_log("代码解析失败，请检查格式是否正确")
             return
 
         # 通过TWS查询合约信息
-        self.reqid += 1
-        self.client.reqContractDetails(self.reqid, ib_contract)
+        # self.reqid += 1
+        # self.client.reqContractDetails(self.reqid, ib_contract)
 
         # 如果使用了字符串风格的代码，则需要缓存
-        if "-" in req.symbol:
-            self.reqid_symbol_map[self.reqid] = req.symbol
+        # if "-" in req.symbol:
+        #     self.reqid_symbol_map[self.reqid] = req.symbol
 
         #  订阅tick数据并创建tick对象缓冲区
         self.reqid += 1
-        self.client.reqMktData(self.reqid, ib_contract, "", False, False, [])
+        if req.timeframe == "ticks":
+            self.client.reqTickByTickData(self.reqid, ib_contract, tickType='BidAsk', numberOfTicks=0, ignoreSize=True)
+        else:
+            self.client.reqMktData(self.reqid, ib_contract, "", False, False, [])
 
         tick: TickData = TickData(
             symbol=req.symbol,
@@ -1060,7 +1070,7 @@ class IbApi(EWrapper):
         if days < 365:
             duration: str = f"{days} D"
         else:
-            duration: str = f"{delta.days/365:.0f} Y"
+            duration: str = f"{delta.days / 365:.0f} Y"
 
         bar_size: str = INTERVAL_VT2IB[req.interval]
 
@@ -1083,12 +1093,12 @@ class IbApi(EWrapper):
             []
         )
 
-        self.history_condition.acquire()    # 等待异步数据返回
+        self.history_condition.acquire()  # 等待异步数据返回
         self.history_condition.wait(600)
         self.history_condition.release()
 
         history: list[BarData] = self.history_buf
-        self.history_buf: list[BarData] = []       # 创新新的缓冲列表
+        self.history_buf: list[BarData] = []  # 创新新的缓冲列表
         self.history_req: HistoryRequest = None
 
         return history
@@ -1187,7 +1197,6 @@ class IbApi(EWrapper):
         self.client.cancelMktData(cancel_id)
 
 
-
 def generate_ib_contract(symbol: str, exchange: Exchange) -> Optional[Contract]:
     """生产IB合约"""
     # 字符串代码
@@ -1197,6 +1206,44 @@ def generate_ib_contract(symbol: str, exchange: Exchange) -> Optional[Contract]:
 
             ib_contract: Contract = Contract()
             ib_contract.exchange = EXCHANGE_VT2IB[exchange]
+            ib_contract.secType = fields[-1]
+            ib_contract.currency = fields[-2]
+            ib_contract.symbol = fields[0]
+
+            if ib_contract.secType in ["FUT", "OPT", "FOP"]:
+                ib_contract.lastTradeDateOrContractMonth = fields[1]
+
+            if ib_contract.secType == "FUT":
+                if len(fields) == 5:
+                    ib_contract.multiplier = int(fields[2])
+
+            if ib_contract.secType in ["OPT", "FOP"]:
+                ib_contract.right = fields[2]
+                ib_contract.strike = float(fields[3])
+                ib_contract.multiplier = int(fields[4])
+        except IndexError:
+            ib_contract = None
+    # 数字代码（ConId）
+    else:
+        if symbol.isdigit():
+            ib_contract: Contract = Contract()
+            ib_contract.exchange = EXCHANGE_VT2IB[exchange]
+            ib_contract.conId = symbol
+        else:
+            ib_contract = None
+
+    return ib_contract
+
+
+def generate_ib_contract_v2(symbol: str, exchange: str) -> Optional[Contract]:
+    """生产IB合约"""
+    # 字符串代码
+    if "-" in symbol:
+        try:
+            fields: list = symbol.split(JOIN_SYMBOL)
+
+            ib_contract: Contract = Contract()
+            ib_contract.exchange = exchange
             ib_contract.secType = fields[-1]
             ib_contract.currency = fields[-2]
             ib_contract.symbol = fields[0]

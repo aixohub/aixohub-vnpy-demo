@@ -34,7 +34,7 @@ class TickData(BaseData):
     """
 
     symbol: str
-    exchange: Exchange
+    exchange: str
     datetime: datetime
 
     name: str = ""
@@ -79,7 +79,7 @@ class TickData(BaseData):
 
     def __post_init__(self) -> None:
         """"""
-        self.vt_symbol: str = f"{self.symbol}.{self.exchange.value}"
+        self.vt_symbol: str = f"{self.symbol}.{self.exchange}"
 
 
 @dataclass
@@ -309,6 +309,9 @@ class SubscribeRequest:
 
     symbol: str
     exchange: str
+    timeframe: str
+    secType: str
+    currency: str
 
     def __post_init__(self) -> None:
         """"""

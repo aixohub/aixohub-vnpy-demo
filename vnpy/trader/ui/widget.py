@@ -84,7 +84,7 @@ class EnumCell(BaseCell):
         Set text using enum.constant.value.
         """
         if content:
-            super().set_content(content.value, data)
+            super().set_content(content, data)
 
 
 class DirectionCell(EnumCell):
@@ -1034,7 +1034,10 @@ class TradingWidget(QtWidgets.QWidget):
         gateway_name: str = str(self.gateway_combo.currentText())
         req: SubscribeRequest = SubscribeRequest(
             symbol=symbol,
-            exchange="SMART"
+            exchange="SMART",
+            currency="USD",
+            timeframe="ticks",
+            secType="STK",
         )
         self.main_engine.subscribe(req, gateway_name)
 
@@ -1042,9 +1045,10 @@ class TradingWidget(QtWidgets.QWidget):
         """
         Cancel all active orders.
         """
+        symbol: str = str(self.symbol_line.text())
         req: SubscribeRequest = SubscribeRequest(
             symbol=symbol,
-            exchange=Exchange.IBKRATS
+            exchange="IBKR",
         )
         self.main_engine.unsubscribe(req, gateway_name)
 
