@@ -44,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.main_engine: MainEngine = main_engine
         self.event_engine: EventEngine = event_engine
 
-        self.window_title: str = _("VeighNa Trader 社区版 - {}   [{}]").format(vnpy.__version__, TRADER_DIR)
+        self.window_title: str = _("VeighNa Trader 工作台 - {}   [{}]").format(vnpy.__version__, TRADER_DIR)
 
         self.widgets: Dict[str, QtWidgets.QWidget] = {}
         self.monitors: Dict[str, BaseMonitor] = {}

@@ -646,6 +646,9 @@ class ConnectDialog(QtWidgets.QDialog):
         button.clicked.connect(self.connect)
         form.addRow(button)
 
+        close_button: QtWidgets.QPushButton = QtWidgets.QPushButton(_("断开连接"))
+        close_button.clicked.connect(self.disconnect)
+        form.addRow(close_button)
         self.setLayout(form)
 
     def connect(self) -> None:
@@ -669,6 +672,13 @@ class ConnectDialog(QtWidgets.QDialog):
         self.main_engine.connect(setting, self.gateway_name)
         self.accept()
 
+    def disconnect(self) -> None:
+        """
+        Get setting value from line edits and connect the gateway.
+        """
+
+        self.main_engine.close()
+        self.accept()
 
 class TradingWidget(QtWidgets.QWidget):
     """

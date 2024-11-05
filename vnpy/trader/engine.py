@@ -172,6 +172,14 @@ class MainEngine:
         if gateway:
             gateway.connect(setting)
 
+    def disconnect(self, setting: dict, gateway_name: str) -> None:
+        """
+        Start connection of a specific gateway.
+        """
+        gateway: BaseGateway = self.get_gateway(gateway_name)
+        if gateway:
+            gateway.disconnect(setting)
+
     def subscribe(self, req: SubscribeRequest, gateway_name: str) -> None:
         """
         Subscribe tick data update of a specific gateway.
