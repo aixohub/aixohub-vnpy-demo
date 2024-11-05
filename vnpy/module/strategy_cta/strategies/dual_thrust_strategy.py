@@ -1,5 +1,5 @@
 from datetime import time
-from vnpy_ctastrategy import (
+from vnpy.module.strategy_cta import (
     CtaTemplate,
     StopOrder,
     TickData,

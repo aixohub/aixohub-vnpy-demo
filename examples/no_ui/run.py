@@ -9,8 +9,8 @@ from vnpy.trader.setting import SETTINGS
 from vnpy.trader.engine import MainEngine
 
 from vnpy_ctp import CtpGateway
-from vnpy_ctastrategy import CtaStrategyApp
-from vnpy_ctastrategy.base import EVENT_CTA_LOG
+from vnpy.module.strategy_cta import CtaStrategyApp
+from vnpy.module.strategy_cta.base import EVENT_CTA_LOG
 
 
 SETTINGS["log.active"] = True

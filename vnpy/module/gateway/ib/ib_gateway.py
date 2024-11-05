@@ -196,8 +196,8 @@ class IbGateway(BaseGateway):
 
     default_setting: dict = {
         "TWS地址": "127.0.0.1",
-        "TWS端口": 7497,
-        "客户号": 1,
+        "TWS端口": 4001,
+        "客户号": 12,
         "交易账户": ""
     }
 

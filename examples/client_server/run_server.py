@@ -1,11 +1,12 @@
 from time import sleep
 
 from vnpy.event import EventEngine, Event
+from vnpy.module.gateway.ib import IbGateway
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.ui import MainWindow, create_qapp
 from vnpy.trader.event import EVENT_LOG
 
-from vnpy_ctp import CtpGateway
+
 from vnpy_rpcservice import RpcServiceApp
 from vnpy_rpcservice.rpc_service.engine import EVENT_RPC_LOG
 
@@ -18,7 +19,7 @@ def main_ui():
 
     main_engine = MainEngine(event_engine)
 
-    main_engine.add_gateway(CtpGateway)
+    main_engine.add_gateway(IbGateway)
     main_engine.add_app(RpcServiceApp)
 
     main_window = MainWindow(main_engine, event_engine)

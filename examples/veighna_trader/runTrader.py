@@ -1,4 +1,9 @@
 # flake8: noqa
+from dotenv import load_dotenv
+
+from vnpy.module.backtester import CtaBacktesterApp
+
+load_dotenv()
 from vnpy.event import EventEngine
 from vnpy.module.datamanager import DataManagerApp
 from vnpy.module.gateway.ib import IbGateway
@@ -7,7 +12,7 @@ from vnpy.module.strategy_cta import CtaStrategyApp
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.ui import MainWindow, create_qapp
 
-from vnpy_ctp import CtpGateway
+
 # from vnpy_ctptest import CtptestGateway
 # from vnpy_mini import MiniGateway
 # from vnpy_femas import FemasGateway
@@ -77,7 +82,7 @@ def main():
 
     # main_engine.add_app(PaperAccountApp)
     main_engine.add_app(CtaStrategyApp)
-    # main_engine.add_app(CtaBacktesterApp)
+    main_engine.add_app(CtaBacktesterApp)
     # main_engine.add_app(SpreadTradingApp)
     # main_engine.add_app(AlgoTradingApp)
     # main_engine.add_app(OptionMasterApp)
