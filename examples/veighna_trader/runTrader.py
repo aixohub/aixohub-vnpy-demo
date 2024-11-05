@@ -2,6 +2,7 @@
 from dotenv import load_dotenv
 
 from vnpy.module.backtester import CtaBacktesterApp
+from vnpy.module.strategy_cta.strategies.atr_rsi_strategy import AtrRsiStrategy
 
 load_dotenv()
 from vnpy.event import EventEngine

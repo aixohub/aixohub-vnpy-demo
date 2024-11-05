@@ -1,8 +1,8 @@
-from vnpy.trader.object import TickData, BarData, OrderData
+from vnpy.trader.object import TickData, BarData, OrderData, TradeData
 
 from vnpy.trader.utility import BarGenerator, ArrayManager
 
-from vnpy.module.strategy_cta import CtaTemplate
+from vnpy.module.strategy_cta import (CtaTemplate, StopOrder)
 
 
 class AtrRsiStrategy(CtaTemplate):
@@ -109,7 +109,7 @@ class AtrRsiStrategy(CtaTemplate):
             self.intra_trade_low = bar.low_price
 
             long_stop = self.intra_trade_high * \
-                (1 - self.trailing_percent / 100)
+                        (1 - self.trailing_percent / 100)
             self.sell(long_stop, abs(self.pos), stop=True)
 
         elif self.pos < 0:
@@ -117,7 +117,7 @@ class AtrRsiStrategy(CtaTemplate):
             self.intra_trade_high = bar.high_price
 
             short_stop = self.intra_trade_low * \
-                (1 + self.trailing_percent / 100)
+                         (1 + self.trailing_percent / 100)
             self.cover(short_stop, abs(self.pos), stop=True)
 
         self.put_event()

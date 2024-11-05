@@ -88,12 +88,10 @@ class BacktesterEngine(BaseEngine):
         """
         Load strategy class from source code.
         """
-        app_path: Path = Path(__file__).parent
-        path1: Path = app_path.joinpath("strategies")
-        self.load_strategy_class_from_folder(path1, "vnpy_ctastrategy.strategies")
+        app_path: Path = Path(__file__).parent.parent
+        path1: Path = app_path.joinpath("strategy_cta/strategies")
+        self.load_strategy_class_from_folder(path1, "vnpy.module.strategy_cta.strategies")
 
-        path2: Path = Path.cwd().joinpath("strategies")
-        self.load_strategy_class_from_folder(path2, "strategies")
 
     def load_strategy_class_from_folder(self, path: Path, module_name: str = "") -> None:
         """
