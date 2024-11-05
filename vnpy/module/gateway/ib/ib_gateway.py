@@ -637,10 +637,11 @@ class IbApi(EWrapper):
         price = averageCost / ib_size
 
         pos: PositionData = PositionData(
-            symbol=self.generate_symbol(contract),
+            symbol=contract.symbol,
             exchange=exchange,
             direction=Direction.NET,
             volume=float(position),
+            currency=contract.currency,
             price=price,
             pnl=unrealizedPNL,
             gateway_name=self.gateway_name,
@@ -1127,10 +1128,6 @@ class IbApi(EWrapper):
         symbol: str = JOIN_SYMBOL.join(fields)
         exchange: Exchange = EXCHANGE_IB2VT.get(ib_contract.exchange, Exchange.SMART)
         vt_symbol: str = f"{symbol}.{exchange.value}"
-
-        # 在合约信息中找不到字符串风格代码，则使用数字代码
-        if vt_symbol not in self.contracts:
-            symbol = str(ib_contract.conId)
 
         return symbol
 

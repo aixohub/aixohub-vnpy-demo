@@ -429,7 +429,7 @@ class LogMonitor(BaseMonitor):
 
     headers: dict = {
         "time": {"display": _("时间"), "cell": TimeCell, "update": False},
-        "msg": {"display": _("信息"), "cell": MsgCell, "update": False},
+        "msg": {"display": _("信息"), "cell": BaseCell, "update": False},
         "gateway_name": {"display": _("接口"), "cell": BaseCell, "update": False},
     }
 
@@ -511,9 +511,12 @@ class PositionMonitor(BaseMonitor):
 
     headers: dict = {
         "symbol": {"display": _("代码"), "cell": BaseCell, "update": False},
+        "currency": {"display": _("币种"), "cell": BaseCell, "update": True},
+        "volume": {"display": _("数量"), "cell": BaseCell, "update": True},
+        "price": {"display": _("均价"), "cell": BaseCell, "update": True},
+        "pnl": {"display": _("盈亏"), "cell": PnlCell, "update": True},
         "exchange": {"display": _("交易所"), "cell": EnumCell, "update": False},
         "direction": {"display": _("方向"), "cell": DirectionCell, "update": False},
-        "volume": {"display": _("数量"), "cell": BaseCell, "update": True},
         "yd_volume": {"display": _("昨仓"), "cell": BaseCell, "update": True},
         "frozen": {"display": _("冻结"), "cell": BaseCell, "update": True},
         "price": {"display": _("均价"), "cell": BaseCell, "update": True},

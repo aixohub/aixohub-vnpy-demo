@@ -180,9 +180,9 @@ class PositionData(BaseData):
     """
 
     symbol: str
+    currency: str
     exchange: Exchange
     direction: Direction
-
     volume: float = 0
     frozen: float = 0
     price: float = 0
