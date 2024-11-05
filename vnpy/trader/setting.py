@@ -9,7 +9,7 @@ from tzlocal import get_localzone_name
 from .utility import load_json
 
 SETTINGS: Dict[str, Any] = {
-    "font.family": "Menlo, Monaco, 'Courier New', monospace",
+    "font.family": "Menlo, Monaco, 'Courier New'",
     "font.size": 12,
 
     "log.active": True,
