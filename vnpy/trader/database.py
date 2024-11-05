@@ -158,3 +158,29 @@ def get_database() -> BaseDatabase:
     # Create database object from module
     database = module.Database()
     return database
+
+
+def get_database_v2() -> BaseDatabase:
+    """"""
+    # Return database object if already inited
+    global database
+    if database:
+        return database
+
+    # Read database related global setting
+    database_name: str = os.environ.get("database.name")
+    module_name: str = f"vnpy_{database_name}"
+
+    if database_name == "mysql":
+        try:
+            from vnpy.database.mysql_database import MysqlDatabase
+            database = MysqlDatabase()
+        except ImportError:
+            pass
+    if database_name == "mongodb":
+        try:
+            from vnpy.database.mongodb_database import MongodbDatabase
+            database = MongodbDatabase()
+        except ImportError:
+            pass
+    return database

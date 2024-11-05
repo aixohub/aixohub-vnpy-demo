@@ -38,7 +38,7 @@ db = ReconnectMySQLDatabase(
     user=os.environ.get("database.user"),
     password=os.environ.get("database.password"),
     host=os.environ.get("database.host"),
-    port=os.environ.get("database.port")
+    port=int(os.environ.get("database.port"))
 )
 
 

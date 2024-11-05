@@ -2,23 +2,23 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 
+load_dotenv()
 from vnpy.trader.ui import create_qapp, QtCore
 from vnpy.trader.constant import Exchange, Interval
-from vnpy.trader.database import get_database
+from vnpy.trader.database import get_database, get_database_v2
 from vnpy.chart import ChartWidget, VolumeItem, CandleItem
-
 
 if __name__ == "__main__":
     load_dotenv()
     app = create_qapp()
 
-    database = get_database()
+    database = get_database_v2()
     bars = database.load_bar_data(
-        "IF888",
-        Exchange.CFFEX,
+        "NVDA",
+        Exchange.IBKRATS,
         interval=Interval.MINUTE,
-        start=datetime(2019, 7, 1),
-        end=datetime(2019, 7, 17)
+        start=datetime(2024, 7, 1),
+        end=datetime(2024, 7, 17)
     )
 
     widget = ChartWidget()
@@ -34,9 +34,11 @@ if __name__ == "__main__":
 
     widget.update_history(history)
 
+
     def update_bar():
         bar = new_data.pop(0)
         widget.update_bar(bar)
+
 
     timer = QtCore.QTimer()
     timer.timeout.connect(update_bar)

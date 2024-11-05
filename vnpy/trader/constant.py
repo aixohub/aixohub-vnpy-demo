@@ -131,6 +131,7 @@ class Exchange(Enum):
     EUNX = "EUNX"           # Euronext Exchange
     KRX = "KRX"             # Korean Exchange
     OTC = "OTC"             # OTC Product (Forex/CFD/Pink Sheet Equity)
+    IBKR = "IBKR"           # Living Trading Exchange of IB
     IBKRATS = "IBKRATS"     # Paper Trading Exchange of IB
 
     # Special Function
