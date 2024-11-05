@@ -75,7 +75,7 @@ class BacktesterManager(QtWidgets.QWidget):
         # Setting Part
         self.class_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
 
-        self.symbol_line: QtWidgets.QLineEdit = QtWidgets.QLineEdit("IF88.CFFEX")
+        self.symbol_line: QtWidgets.QLineEdit = QtWidgets.QLineEdit("NVDA")
 
         self.interval_combo: QtWidgets.QComboBox = QtWidgets.QComboBox()
         for interval in Interval:

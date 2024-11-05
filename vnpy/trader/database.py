@@ -176,11 +176,13 @@ def get_database_v2() -> BaseDatabase:
             from vnpy.module.database import MysqlDatabase
             database = MysqlDatabase()
         except ImportError:
+            print("Oop MysqlDatabase import error")
             pass
     if database_name == "mongodb":
         try:
             from vnpy.module.database.mongodb_database import MongodbDatabase
             database = MongodbDatabase()
         except ImportError:
+            print("Oop MongodbDatabase import error")
             pass
     return database

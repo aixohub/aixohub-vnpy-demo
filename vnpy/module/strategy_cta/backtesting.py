@@ -17,7 +17,7 @@ from vnpy.trader.constant import (
     Interval,
     Status
 )
-from vnpy.trader.database import get_database, BaseDatabase
+from vnpy.trader.database import get_database, BaseDatabase, get_database_v2
 from vnpy.trader.object import OrderData, TradeData, BarData, TickData
 from vnpy.trader.utility import round_to, extract_vt_symbol
 from vnpy.trader.optimize import (
@@ -1083,7 +1083,7 @@ def load_bar_data(
     end: datetime
 ) -> List[BarData]:
     """"""
-    database: BaseDatabase = get_database()
+    database: BaseDatabase = get_database_v2()
 
     return database.load_bar_data(
         symbol, exchange, interval, start, end
