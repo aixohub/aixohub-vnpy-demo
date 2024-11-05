@@ -11,7 +11,7 @@ ES-2020006-C-2430-50-USD-FOP  GLOBEX
 ConId is also supported for symbol.
 """
 
-
+import threading
 from copy import copy
 from datetime import datetime, timedelta
 from threading import Thread, Condition
@@ -298,6 +298,11 @@ class IbApi(EWrapper):
         self.client: EClient = EClient(self)
 
         self.ib_contracts: dict[str, Contract] = {}
+
+        # Account list received
+        self.managed_accounts = list()
+        # self.reqPositions()
+
 
     def connectAck(self) -> None:
         """连接成功回报"""
@@ -587,6 +592,8 @@ class IbApi(EWrapper):
 
         name: str = ACCOUNTFIELD_IB2VT[key]
         setattr(account, name, float(val))
+        print(f"updateAccountValue key: {key}, val: {val}, currency: {currency}, accountName: {accountName}")
+
 
     def updatePortfolio(
         self,
@@ -639,6 +646,23 @@ class IbApi(EWrapper):
             gateway_name=self.gateway_name,
         )
         self.gateway.on_position(pos)
+
+
+    def accountDownloadEnd(self, accountName):
+        """This is called after a batch updateAccountValue() and
+        updatePortfolio() is sent."""
+        print(f"accountDownloadEnd -- accountName: {accountName}")
+        super().accountDownloadEnd(accountName)
+
+    def reqPositions(self):
+        '''Proxy to reqPositions'''
+        self.client.reqPositions()
+
+    def positionEnd(self):
+        """This is called once all position data for a given request are
+        received and functions as an end marker for the position() data. """
+        print("positionEnd --------")
+        super().positionEnd()
 
     def updateAccountTime(self, timeStamp: str) -> None:
         """账号更新时间回报"""
@@ -775,11 +799,10 @@ class IbApi(EWrapper):
         super().managedAccounts(accountsList)
 
         if not self.account:
-            for account_code in accountsList.split(","):
-                if account_code:
-                    self.account = account_code
+            self.managed_accounts = [s for s in accountsList.split(',') if s]
+            self.account = self.managed_accounts[0]
 
-        self.gateway.write_log(f"当前使用的交易账号为{self.account}")
+        self.gateway.write_log(f"账号: {self.account}")
         self.client.reqAccountUpdates(True, self.account)
 
     def historicalData(self, reqId: int, ib_bar: IbBarData) -> None:
